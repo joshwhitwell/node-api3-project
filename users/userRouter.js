@@ -88,7 +88,7 @@ router.get('/:id/posts', [validateUserId], (req, res, next) => {
     .then(posts => {
       res.status(200).json(posts)
     })
-    .catch(err => {
+    .catch(() => {
       next({ code: 500, message: 'Error getting posts' })
     })
 });
@@ -98,13 +98,19 @@ router.delete('/:id', [validateUserId], (req, res, next) => {
     .then(user => {
       res.status(200).json({ deletedItems: user})
     })
-    .catch(err => {
+    .catch((err) => {
       next({ code: 500, message: 'Error deleting user' })
     })
 });
 
-router.put('/:id', (req, res) => {
-  // do your magic!
+router.put('/:id', [validateUserId, validateUser], (req, res, next) => {
+  Users.update(req.params.id, req.body)
+    .then(user => {
+      res.status(200).json({ updatedItems: user})
+    })
+    .catch(() => {
+      next({ code: 500, message: 'Error updating user' })
+    })
 });
 
 
