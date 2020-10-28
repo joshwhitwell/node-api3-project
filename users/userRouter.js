@@ -1,13 +1,26 @@
 //imports
 const express = require('express');
 const Users = require('./userDb')
+const Posts = require('../posts/postDb')
 
 //router
 const router = express.Router();
 
 //custom middleware
 function validateUserId(req, res, next) {
-  // do your magic!
+  const { id } = req.params
+  Users.getById(id)
+    .then(user => {
+      if (user) {
+        req.user = user
+        next()
+      } else {
+        next({ code: 404, message: `User not found with ID: ${id}`})
+      }
+    })
+    .catch(() => {
+      next({ code: 500, message: `Error validating user with ID: ${id}`})
+    })
 }
 
 function validateUser(req, res, next) {
@@ -23,9 +36,17 @@ function validateUser(req, res, next) {
 }
 
 function validatePost(req, res, next) {
-  
+  const { body } = req
+  const { text } = req.body
+  if (!body) {
+    next({ code: 400, message: 'missing post data' })
+  } else if (!text) {
+    next({ code: 400, message: 'missing required text field' })
+  } else {
+    req.body = { ...req.body, user_id: req.user.id }
+    next()
+  }
 }
-
 
 //routes
 router.post('/', [validateUser], (req, res, next) => {
@@ -38,8 +59,14 @@ router.post('/', [validateUser], (req, res, next) => {
     })
 });
 
-router.post('/:id/posts', (req, res) => {
-  // do your magic!
+router.post('/:id/posts', [validateUserId, validatePost], (req, res, next) => {
+  Posts.insert(req.body)
+    .then(post => {
+      res.status(201).json(post)
+    })
+    .catch(() => {
+      next({ code: 500, message: 'Error posting post' })
+    })
 });
 
 router.get('/', (req, res, next) => {
