@@ -19,7 +19,7 @@ function validateUserId(req, res, next) {
       }
     })
     .catch(() => {
-      next({ code: 500, message: `Error validating user with ID: ${id}`})
+      next({ code: 500, message: `Error getting user with ID: ${id}`})
     })
 }
 
@@ -39,9 +39,9 @@ function validatePost(req, res, next) {
   const { body } = req
   const { text } = req.body
   if (!body) {
-    next({ code: 400, message: 'missing post data' })
+    next({ code: 400, message: 'Missing post data' })
   } else if (!text) {
-    next({ code: 400, message: 'missing required text field' })
+    next({ code: 400, message: 'Missing required text field' })
   } else {
     req.body = { ...req.body, user_id: req.user.id }
     next()
@@ -83,8 +83,14 @@ router.get('/:id', [validateUserId], (req, res) => {
   res.status(200).json(req.user)
 });
 
-router.get('/:id/posts', (req, res) => {
-  // do your magic!
+router.get('/:id/posts', [validateUserId], (req, res, next) => {
+  Users.getUserPosts(req.params.id)
+    .then(posts => {
+      res.status(200).json(posts)
+    })
+    .catch(err => {
+      next({ code: 500, message: 'Error getting posts' })
+    })
 });
 
 router.delete('/:id', (req, res) => {
