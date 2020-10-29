@@ -26,7 +26,7 @@ function validateUserId(req, res, next) {
 function validateUser(req, res, next) {
   const { body } = req
   const { name } = req.body
-  if (!body) {
+  if (Object.keys(body).length === 0) {
     next({ code: 400, message: 'missing user data' })
   } else if (!name) {
     next({ code: 400, message: 'missing required name field' })
@@ -38,7 +38,7 @@ function validateUser(req, res, next) {
 function validatePost(req, res, next) {
   const { body } = req
   const { text } = req.body
-  if (!body) {
+  if (Object.keys(body).length === 0) {
     next({ code: 400, message: 'Missing post data' })
   } else if (!text) {
     next({ code: 400, message: 'Missing required text field' })
