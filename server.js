@@ -18,7 +18,7 @@ server.use('/api/users', userRouter)
 
 //routes
 server.get('/', (req, res) => {
-  res.send(`<h2>Let's write some middleware!</h2>`);
+  res.send(`<h2>Hello from Heroku!</h2>`);
 });
 
 //exports
