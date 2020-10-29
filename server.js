@@ -5,6 +5,8 @@ const userRouter = require('./users/userRouter')
 //server
 const server = express();
 
+const message = process.env.MESSAGE || 'Hello from server.js'
+
 //custom middleware
 function logger(req, res, next) {
   console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`)
@@ -18,7 +20,7 @@ server.use('/api/users', userRouter)
 
 //routes
 server.get('/', (req, res) => {
-  res.send(`<h2>Let's write some middleware!</h2>`);
+  res.send(`<h2>${message}</h2>`);
 });
 
 //exports
