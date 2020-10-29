@@ -18,8 +18,8 @@ function validateUserId(req, res, next) {
         next({ code: 404, message: `User not found with ID: ${id}`})
       }
     })
-    .catch(() => {
-      next({ code: 500, message: `Error getting user with ID: ${id}`})
+    .catch((err) => {
+      next({ code: 500, message: `Error getting user with ID: ${id}`, err})
     })
 }
 
@@ -54,8 +54,8 @@ router.post('/', [validateUser], (req, res, next) => {
     .then(data => {
       res.status(201).json(data)
     })
-    .catch(() => {
-      next({ code: 500, message: 'Error posting user' })
+    .catch((err) => {
+      next({ code: 500, message: 'Error posting user', err })
     })
 });
 
@@ -64,8 +64,8 @@ router.post('/:id/posts', [validateUserId, validatePost], (req, res, next) => {
     .then(post => {
       res.status(201).json(post)
     })
-    .catch(() => {
-      next({ code: 500, message: 'Error posting post' })
+    .catch((err) => {
+      next({ code: 500, message: 'Error posting post', err })
     })
 });
 
@@ -74,8 +74,8 @@ router.get('/', (req, res, next) => {
     .then(data => {
       res.status(200).json(data)
     })
-    .catch(() => {
-      next({ code: 500, message: 'Error getting users' })
+    .catch((err) => {
+      next({ code: 500, message: 'Error getting users', err })
     })
 });
 
@@ -88,8 +88,8 @@ router.get('/:id/posts', [validateUserId], (req, res, next) => {
     .then(posts => {
       res.status(200).json(posts)
     })
-    .catch(() => {
-      next({ code: 500, message: 'Error getting posts' })
+    .catch((err) => {
+      next({ code: 500, message: 'Error getting posts', err })
     })
 });
 
@@ -98,8 +98,8 @@ router.delete('/:id', [validateUserId], (req, res, next) => {
     .then(user => {
       res.status(200).json({ deletedItems: user})
     })
-    .catch(() => {
-      next({ code: 500, message: 'Error deleting user' })
+    .catch((err) => {
+      next({ code: 500, message: 'Error deleting user', err })
     })
 });
 
@@ -108,8 +108,8 @@ router.put('/:id', [validateUserId, validateUser], (req, res, next) => {
     .then(user => {
       res.status(200).json({ updatedItems: user})
     })
-    .catch(() => {
-      next({ code: 500, message: 'Error updating user' })
+    .catch((err) => {
+      next({ code: 500, message: 'Error updating user', err })
     })
 });
 
