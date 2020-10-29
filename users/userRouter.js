@@ -98,7 +98,7 @@ router.delete('/:id', [validateUserId], (req, res, next) => {
     .then(user => {
       res.status(200).json({ deletedItems: user})
     })
-    .catch((err) => {
+    .catch(() => {
       next({ code: 500, message: 'Error deleting user' })
     })
 });
